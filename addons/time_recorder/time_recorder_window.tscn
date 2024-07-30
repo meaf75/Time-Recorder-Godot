@@ -1,0 +1,266 @@
+[gd_scene load_steps=5 format=3 uid="uid://do7i7vkp8rl7p"]
+
+[ext_resource type="PackedScene" uid="uid://c7uj0da24e1ix" path="res://addons/time_recorder/day_label.tscn" id="1_qqnsu"]
+[ext_resource type="Script" path="res://addons/time_recorder/time_recorder_window.gd" id="1_uxoom"]
+[ext_resource type="PackedScene" uid="uid://ds23mqufrmxav" path="res://addons/time_recorder/day_container.tscn" id="2_frhrj"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rj7ow"]
+bg_color = Color(0.129412, 0.14902, 0.180392, 1)
+border_color = Color(0.992157, 0.717647, 0.741176, 1)
+corner_detail = 1
+expand_margin_left = 5.0
+expand_margin_top = 5.0
+expand_margin_right = 5.0
+expand_margin_bottom = 5.0
+
+[node name="time_recorder_window" type="Window" node_paths=PackedStringArray("tr_days", "label_active_month")]
+position = Vector2i(0, 36)
+size = Vector2i(750, 680)
+script = ExtResource("1_uxoom")
+tr_days = [NodePath("PanelContainer/MarginContainer/VBoxContainer/DaysContainer/day_container"), NodePath("PanelContainer/MarginContainer/VBoxContainer/DaysContainer/day_container2"), NodePath("PanelContainer/MarginContainer/VBoxContainer/DaysContainer/day_container3"), NodePath("PanelContainer/MarginContainer/VBoxContainer/DaysContainer/day_container4"), NodePath("PanelContainer/MarginContainer/VBoxContainer/DaysContainer/day_container5"), NodePath("PanelContainer/MarginContainer/VBoxContainer/DaysContainer/day_container6"), NodePath("PanelContainer/MarginContainer/VBoxContainer/DaysContainer/day_container7"), NodePath("PanelContainer/MarginContainer/VBoxContainer/DaysContainer/day_container8"), NodePath("PanelContainer/MarginContainer/VBoxContainer/DaysContainer/day_container9"), NodePath("PanelContainer/MarginContainer/VBoxContainer/DaysContainer/day_container10"), NodePath("PanelContainer/MarginContainer/VBoxContainer/DaysContainer/day_container11"), NodePath("PanelContainer/MarginContainer/VBoxContainer/DaysContainer/day_container12"), NodePath("PanelContainer/MarginContainer/VBoxContainer/DaysContainer/day_container13"), NodePath("PanelContainer/MarginContainer/VBoxContainer/DaysContainer/day_container14"), NodePath("PanelContainer/MarginContainer/VBoxContainer/DaysContainer/day_container15"), NodePath("PanelContainer/MarginContainer/VBoxContainer/DaysContainer/day_container16"), NodePath("PanelContainer/MarginContainer/VBoxContainer/DaysContainer/day_container17"), NodePath("PanelContainer/MarginContainer/VBoxContainer/DaysContainer/day_container18"), NodePath("PanelContainer/MarginContainer/VBoxContainer/DaysContainer/day_container19"), NodePath("PanelContainer/MarginContainer/VBoxContainer/DaysContainer/day_container20"), NodePath("PanelContainer/MarginContainer/VBoxContainer/DaysContainer/day_container21"), NodePath("PanelContainer/MarginContainer/VBoxContainer/DaysContainer/day_container22"), NodePath("PanelContainer/MarginContainer/VBoxContainer/DaysContainer/day_container23"), NodePath("PanelContainer/MarginContainer/VBoxContainer/DaysContainer/day_container24"), NodePath("PanelContainer/MarginContainer/VBoxContainer/DaysContainer/day_container25"), NodePath("PanelContainer/MarginContainer/VBoxContainer/DaysContainer/day_container26"), NodePath("PanelContainer/MarginContainer/VBoxContainer/DaysContainer/day_container27"), NodePath("PanelContainer/MarginContainer/VBoxContainer/DaysContainer/day_container28"), NodePath("PanelContainer/MarginContainer/VBoxContainer/DaysContainer/day_container29"), NodePath("PanelContainer/MarginContainer/VBoxContainer/DaysContainer/day_container30"), NodePath("PanelContainer/MarginContainer/VBoxContainer/DaysContainer/day_container31"), NodePath("PanelContainer/MarginContainer/VBoxContainer/DaysContainer/day_container32"), NodePath("PanelContainer/MarginContainer/VBoxContainer/DaysContainer/day_container33"), NodePath("PanelContainer/MarginContainer/VBoxContainer/DaysContainer/day_container34"), NodePath("PanelContainer/MarginContainer/VBoxContainer/DaysContainer/day_container35"), NodePath("PanelContainer/MarginContainer/VBoxContainer/DaysContainer/day_container36"), NodePath("PanelContainer/MarginContainer/VBoxContainer/DaysContainer/day_container37"), NodePath("PanelContainer/MarginContainer/VBoxContainer/DaysContainer/day_container38"), NodePath("PanelContainer/MarginContainer/VBoxContainer/DaysContainer/day_container39"), NodePath("PanelContainer/MarginContainer/VBoxContainer/DaysContainer/day_container40"), NodePath("PanelContainer/MarginContainer/VBoxContainer/DaysContainer/day_container41"), NodePath("PanelContainer/MarginContainer/VBoxContainer/DaysContainer/day_container42")]
+label_active_month = NodePath("PanelContainer/MarginContainer/VBoxContainer/Header/HBoxContainer/LabelActiveMonth")
+
+[node name="PanelContainer" type="PanelContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_rj7ow")
+
+[node name="MarginContainer" type="MarginContainer" parent="PanelContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/MarginContainer"]
+layout_mode = 2
+
+[node name="Header" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/Header"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="ButtonPreviousMonth" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer/Header/HBoxContainer"]
+layout_mode = 2
+text = " <-- "
+
+[node name="LabelActiveMonth" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/Header/HBoxContainer"]
+layout_mode = 2
+text = "Jul 2024"
+
+[node name="ButtonNextMonth" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer/Header/HBoxContainer"]
+layout_mode = 2
+text = " --> "
+
+[node name="HBoxContainerDetails" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/Header"]
+layout_mode = 2
+
+[node name="Button" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer/Header/HBoxContainerDetails"]
+layout_mode = 2
+text = " Pause "
+
+[node name="Label" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/Header/HBoxContainerDetails"]
+layout_mode = 2
+text = "Total dev time:      
+"
+
+[node name="VSeparator" type="VSeparator" parent="PanelContainer/MarginContainer/VBoxContainer/Header/HBoxContainerDetails"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="LabelTime" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/Header/HBoxContainerDetails"]
+layout_mode = 2
+theme_override_constants/line_spacing = -5
+text = "285 h
+27 min"
+horizontal_alignment = 2
+
+[node name="HSeparator" type="HSeparator" parent="PanelContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="DaysContainer" type="GridContainer" parent="PanelContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+columns = 7
+
+[node name="day_label_monday" parent="PanelContainer/MarginContainer/VBoxContainer/DaysContainer" instance=ExtResource("1_qqnsu")]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="day_label_tuesday" parent="PanelContainer/MarginContainer/VBoxContainer/DaysContainer" instance=ExtResource("1_qqnsu")]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="day_label_wednesday" parent="PanelContainer/MarginContainer/VBoxContainer/DaysContainer" instance=ExtResource("1_qqnsu")]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label" parent="PanelContainer/MarginContainer/VBoxContainer/DaysContainer/day_label_wednesday/MarginContainer" index="0"]
+text = "Wednesday"
+
+[node name="day_label_thursday" parent="PanelContainer/MarginContainer/VBoxContainer/DaysContainer" instance=ExtResource("1_qqnsu")]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label" parent="PanelContainer/MarginContainer/VBoxContainer/DaysContainer/day_label_thursday/MarginContainer" index="0"]
+text = "Thursday"
+
+[node name="day_label_friday" parent="PanelContainer/MarginContainer/VBoxContainer/DaysContainer" instance=ExtResource("1_qqnsu")]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label" parent="PanelContainer/MarginContainer/VBoxContainer/DaysContainer/day_label_friday/MarginContainer" index="0"]
+text = "Friday"
+
+[node name="day_label_saturday" parent="PanelContainer/MarginContainer/VBoxContainer/DaysContainer" instance=ExtResource("1_qqnsu")]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label" parent="PanelContainer/MarginContainer/VBoxContainer/DaysContainer/day_label_saturday/MarginContainer" index="0"]
+text = "Saturday"
+
+[node name="day_label_sunday" parent="PanelContainer/MarginContainer/VBoxContainer/DaysContainer" instance=ExtResource("1_qqnsu")]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label" parent="PanelContainer/MarginContainer/VBoxContainer/DaysContainer/day_label_sunday/MarginContainer" index="0"]
+text = "Sunday"
+
+[node name="day_container" parent="PanelContainer/MarginContainer/VBoxContainer/DaysContainer" instance=ExtResource("2_frhrj")]
+layout_mode = 2
+
+[node name="day_container2" parent="PanelContainer/MarginContainer/VBoxContainer/DaysContainer" instance=ExtResource("2_frhrj")]
+layout_mode = 2
+
+[node name="day_container3" parent="PanelContainer/MarginContainer/VBoxContainer/DaysContainer" instance=ExtResource("2_frhrj")]
+layout_mode = 2
+
+[node name="day_container4" parent="PanelContainer/MarginContainer/VBoxContainer/DaysContainer" instance=ExtResource("2_frhrj")]
+layout_mode = 2
+
+[node name="day_container5" parent="PanelContainer/MarginContainer/VBoxContainer/DaysContainer" instance=ExtResource("2_frhrj")]
+layout_mode = 2
+
+[node name="day_container6" parent="PanelContainer/MarginContainer/VBoxContainer/DaysContainer" instance=ExtResource("2_frhrj")]
+layout_mode = 2
+
+[node name="day_container7" parent="PanelContainer/MarginContainer/VBoxContainer/DaysContainer" instance=ExtResource("2_frhrj")]
+layout_mode = 2
+
+[node name="day_container8" parent="PanelContainer/MarginContainer/VBoxContainer/DaysContainer" instance=ExtResource("2_frhrj")]
+layout_mode = 2
+
+[node name="day_container9" parent="PanelContainer/MarginContainer/VBoxContainer/DaysContainer" instance=ExtResource("2_frhrj")]
+layout_mode = 2
+
+[node name="day_container10" parent="PanelContainer/MarginContainer/VBoxContainer/DaysContainer" instance=ExtResource("2_frhrj")]
+layout_mode = 2
+
+[node name="day_container11" parent="PanelContainer/MarginContainer/VBoxContainer/DaysContainer" instance=ExtResource("2_frhrj")]
+layout_mode = 2
+
+[node name="day_container12" parent="PanelContainer/MarginContainer/VBoxContainer/DaysContainer" instance=ExtResource("2_frhrj")]
+layout_mode = 2
+
+[node name="day_container13" parent="PanelContainer/MarginContainer/VBoxContainer/DaysContainer" instance=ExtResource("2_frhrj")]
+layout_mode = 2
+
+[node name="day_container14" parent="PanelContainer/MarginContainer/VBoxContainer/DaysContainer" instance=ExtResource("2_frhrj")]
+layout_mode = 2
+
+[node name="day_container15" parent="PanelContainer/MarginContainer/VBoxContainer/DaysContainer" instance=ExtResource("2_frhrj")]
+layout_mode = 2
+
+[node name="day_container16" parent="PanelContainer/MarginContainer/VBoxContainer/DaysContainer" instance=ExtResource("2_frhrj")]
+layout_mode = 2
+
+[node name="day_container17" parent="PanelContainer/MarginContainer/VBoxContainer/DaysContainer" instance=ExtResource("2_frhrj")]
+layout_mode = 2
+
+[node name="day_container18" parent="PanelContainer/MarginContainer/VBoxContainer/DaysContainer" instance=ExtResource("2_frhrj")]
+layout_mode = 2
+
+[node name="day_container19" parent="PanelContainer/MarginContainer/VBoxContainer/DaysContainer" instance=ExtResource("2_frhrj")]
+layout_mode = 2
+
+[node name="day_container20" parent="PanelContainer/MarginContainer/VBoxContainer/DaysContainer" instance=ExtResource("2_frhrj")]
+layout_mode = 2
+
+[node name="day_container21" parent="PanelContainer/MarginContainer/VBoxContainer/DaysContainer" instance=ExtResource("2_frhrj")]
+layout_mode = 2
+
+[node name="day_container22" parent="PanelContainer/MarginContainer/VBoxContainer/DaysContainer" instance=ExtResource("2_frhrj")]
+layout_mode = 2
+
+[node name="day_container23" parent="PanelContainer/MarginContainer/VBoxContainer/DaysContainer" instance=ExtResource("2_frhrj")]
+layout_mode = 2
+
+[node name="day_container24" parent="PanelContainer/MarginContainer/VBoxContainer/DaysContainer" instance=ExtResource("2_frhrj")]
+layout_mode = 2
+
+[node name="day_container25" parent="PanelContainer/MarginContainer/VBoxContainer/DaysContainer" instance=ExtResource("2_frhrj")]
+layout_mode = 2
+
+[node name="day_container26" parent="PanelContainer/MarginContainer/VBoxContainer/DaysContainer" instance=ExtResource("2_frhrj")]
+layout_mode = 2
+
+[node name="day_container27" parent="PanelContainer/MarginContainer/VBoxContainer/DaysContainer" instance=ExtResource("2_frhrj")]
+layout_mode = 2
+
+[node name="day_container28" parent="PanelContainer/MarginContainer/VBoxContainer/DaysContainer" instance=ExtResource("2_frhrj")]
+layout_mode = 2
+
+[node name="day_container29" parent="PanelContainer/MarginContainer/VBoxContainer/DaysContainer" instance=ExtResource("2_frhrj")]
+layout_mode = 2
+
+[node name="day_container30" parent="PanelContainer/MarginContainer/VBoxContainer/DaysContainer" instance=ExtResource("2_frhrj")]
+layout_mode = 2
+
+[node name="day_container31" parent="PanelContainer/MarginContainer/VBoxContainer/DaysContainer" instance=ExtResource("2_frhrj")]
+layout_mode = 2
+
+[node name="day_container32" parent="PanelContainer/MarginContainer/VBoxContainer/DaysContainer" instance=ExtResource("2_frhrj")]
+layout_mode = 2
+
+[node name="day_container33" parent="PanelContainer/MarginContainer/VBoxContainer/DaysContainer" instance=ExtResource("2_frhrj")]
+layout_mode = 2
+
+[node name="day_container34" parent="PanelContainer/MarginContainer/VBoxContainer/DaysContainer" instance=ExtResource("2_frhrj")]
+layout_mode = 2
+
+[node name="day_container35" parent="PanelContainer/MarginContainer/VBoxContainer/DaysContainer" instance=ExtResource("2_frhrj")]
+layout_mode = 2
+
+[node name="day_container36" parent="PanelContainer/MarginContainer/VBoxContainer/DaysContainer" instance=ExtResource("2_frhrj")]
+layout_mode = 2
+
+[node name="day_container37" parent="PanelContainer/MarginContainer/VBoxContainer/DaysContainer" instance=ExtResource("2_frhrj")]
+layout_mode = 2
+
+[node name="day_container38" parent="PanelContainer/MarginContainer/VBoxContainer/DaysContainer" instance=ExtResource("2_frhrj")]
+layout_mode = 2
+
+[node name="day_container39" parent="PanelContainer/MarginContainer/VBoxContainer/DaysContainer" instance=ExtResource("2_frhrj")]
+layout_mode = 2
+
+[node name="day_container40" parent="PanelContainer/MarginContainer/VBoxContainer/DaysContainer" instance=ExtResource("2_frhrj")]
+layout_mode = 2
+
+[node name="day_container41" parent="PanelContainer/MarginContainer/VBoxContainer/DaysContainer" instance=ExtResource("2_frhrj")]
+layout_mode = 2
+
+[node name="day_container42" parent="PanelContainer/MarginContainer/VBoxContainer/DaysContainer" instance=ExtResource("2_frhrj")]
+layout_mode = 2
+
+[connection signal="pressed" from="PanelContainer/MarginContainer/VBoxContainer/Header/HBoxContainer/ButtonPreviousMonth" to="." method="change_month" binds= [-1]]
+[connection signal="pressed" from="PanelContainer/MarginContainer/VBoxContainer/Header/HBoxContainer/ButtonNextMonth" to="." method="change_month" binds= [1]]
+
+[editable path="PanelContainer/MarginContainer/VBoxContainer/DaysContainer/day_label_wednesday"]
+[editable path="PanelContainer/MarginContainer/VBoxContainer/DaysContainer/day_label_thursday"]
+[editable path="PanelContainer/MarginContainer/VBoxContainer/DaysContainer/day_label_friday"]
+[editable path="PanelContainer/MarginContainer/VBoxContainer/DaysContainer/day_label_saturday"]
+[editable path="PanelContainer/MarginContainer/VBoxContainer/DaysContainer/day_label_sunday"]

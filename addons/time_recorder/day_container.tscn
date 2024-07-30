@@ -1,0 +1,46 @@
+[gd_scene load_steps=3 format=3 uid="uid://ds23mqufrmxav"]
+
+[ext_resource type="Script" path="res://addons/time_recorder/day_container.gd" id="1_rid4r"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pav3f"]
+bg_color = Color(0.219608, 0.239216, 0.266667, 1)
+
+[node name="day_container" type="PanelContainer" node_paths=PackedStringArray("label_day_number", "label_time")]
+custom_minimum_size = Vector2(101, 94)
+theme_override_styles/panel = SubResource("StyleBoxFlat_pav3f")
+script = ExtResource("1_rid4r")
+label_day_number = NodePath("MarginContainer/VBoxContainer/HBoxContainer/LabelDay")
+label_time = NodePath("MarginContainer/VBoxContainer/LabelTime")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 31)
+layout_mode = 2
+size_flags_vertical = 0
+
+[node name="LabelDay" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "1
+"
+
+[node name="Button" type="Button" parent="MarginContainer/VBoxContainer/HBoxContainer"]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Edit"
+
+[node name="LabelTime" type="Label" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "4 h
+30 min"
+horizontal_alignment = 1
