@@ -3,23 +3,28 @@ extends PanelContainer
 
 class_name TRDayContainer
 
-@export
-var label_day_number : Label
+@export var day_header_container : HBoxContainer
+@export var label_day_number : Label
+@export var label_time : Label
 
-@export
-var label_time : Label
+@export var button_edit : Button
 
-# Called when the node enters the scene tree for the first time.
-func _ready():
-	pass # Replace with function body.
+@export var minutes_editor_container : VBoxContainer
+@export var minutes_input : SpinBox
 
+var time_in_seconds : int
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta):
-	pass
+var is_active : bool
+
+var year: int
+var month: int
+var day: int
 
 func set_active_style(active: bool):
+	is_active = active
 	var styleBox: StyleBoxFlat = get_theme_stylebox("panel").duplicate()
+
+	day_header_container.visible = active
 
 	if active:
 		styleBox.set("bg_color", Color("383d44"))

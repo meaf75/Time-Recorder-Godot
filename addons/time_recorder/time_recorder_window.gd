@@ -3,17 +3,12 @@ extends Window
 
 class_name TRWindow
 
-@export
-var tr_days : Array[TRDayContainer]
+@export var tr_days : Array[TRDayContainer]
 
-@export
-var label_active_month : Label
+@export var label_active_month : Label
+@export var label_total_time : Label
 
-@export
-var label_total_time : Label
-
-@export
-var button_pause : Button
+@export var button_pause : Button
 
 var active_month : int
 var active_year : int
@@ -25,6 +20,8 @@ var months = {
 }
 
 var _controller : TimeRecorder
+var current_day_hovered = -1
+var current_day_editing = -1
 
 func _init():
 	var t = Time.get_datetime_dict_from_system()
@@ -35,6 +32,10 @@ func open_window(controller: TimeRecorder):
 
 	_controller.on_config_update.connect(refresh_window)
 	_controller.on_save_data_update.connect(refresh_window)
+
+	for i in len(tr_days):
+		tr_days[i].mouse_entered.connect(_on_hover_day_container.bind(i))
+		tr_days[i].button_edit.pressed.connect(_on_click_edit_day.bind(i))
 
 	var current_date = Time.get_datetime_dict_from_system()
 	load_month(current_date.month,current_date.year)
@@ -85,6 +86,7 @@ func load_month(month: int, year: int):
 	label_active_month.text = active_date
 	label_total_time.text = get_time_label_for_seconds(session.total_time_in_seconds)
 	button_pause.text = "Resume l>" if _controller.is_paused else "Pause [][]"
+	title = "Time Recorder (%s)" % ("Paused" if _controller.is_paused else "Running")
 
 	var active_days = 0
 
@@ -101,12 +103,13 @@ func load_month(month: int, year: int):
 
 		var label_day_number = ""
 		var label_time = ""
-		var is_a_day_of_active_month = TRDateChecker.check_date_string(date_str) != OK or i + 1 < weekday
+		var time_in_seconds = 0
+		var is_a_day_of_other_month = TRDateChecker.check_date_string(date_str) != OK or i + 1 < weekday
 
 		styleBox.set("bg_color", Color.BLUE)
 		day_container.add_theme_stylebox_override("panel", styleBox)
 
-		if is_a_day_of_active_month:
+		if is_a_day_of_other_month:
 			var day_description = ""
 			var month_of_the_day = month
 
@@ -129,16 +132,27 @@ func load_month(month: int, year: int):
 
 			if tr_month.dates.has(day_key):
 				var tr_day : TimeRecorder.TRDay = tr_month.dates[day_key]
+				time_in_seconds = tr_day.time_in_seconds
 				label_time = get_time_label_for_seconds(tr_day.time_in_seconds)
 
-		day_container.set_active_style(is_a_day_of_active_month)
+		day_container.set_active_style(!is_a_day_of_other_month)
 		day_container.label_day_number.text = label_day_number
 		day_container.label_time.text = label_time
+
+		day_container.year = year
+		day_container.month = month
+		day_container.day = active_days
+		day_container.time_in_seconds = time_in_seconds
+
+
 
 
 func get_time_label_for_seconds(seconds: int) -> String:
 	var label_time : String = ""
 	var hours : int = int(seconds / 3600)
+
+	if seconds <= 0:
+		return label_time
 
 	if hours >= 1:
 		var minutes_in_sec = seconds - hours * 3600
@@ -175,3 +189,75 @@ func _on_button_pause_pressed():
 		TimeRecorder.CONFIG_KEY_PAUSED,
 		!_controller.is_paused
 	)
+
+
+func _on_hover_day_container(day_idx: int):
+
+	if current_day_hovered >= 0:
+		tr_days[current_day_hovered].button_edit.visible = false
+
+	current_day_hovered = day_idx
+
+	if current_day_hovered >= 0 && tr_days[current_day_hovered].is_active:
+		tr_days[current_day_hovered].button_edit.visible = true
+
+
+func _on_click_edit_day(day_idx: int):
+
+	if day_idx >= 0 && current_day_editing == day_idx:
+		# save
+		var day_container = tr_days[current_day_editing]
+
+		_controller.validate_tr_data(
+			_controller.tr_sessions,
+			day_container.year,
+			day_container.month,
+			day_container.day
+		)
+
+		var session : TimeRecorder.TRSession = _controller.tr_sessions[_controller.session_name]
+		var year : TimeRecorder.TRYear = session.years[str(day_container.year)]
+		var month : TimeRecorder.TRMonth = year.months[str(day_container.month)]
+		var day : TimeRecorder.TRDay = month.dates[str(day_container.day)]
+
+		var new_seconds = day_container.minutes_input.value * 60
+
+		day.time_in_seconds = new_seconds
+
+		session.total_time_in_seconds = (
+			session.total_time_in_seconds
+			- day_container.time_in_seconds
+			+ new_seconds
+		)
+
+		_controller.save(_controller.tr_sessions)
+		day_container.time_in_seconds = new_seconds
+		day_container.label_time.text = get_time_label_for_seconds(new_seconds)
+		label_total_time.text = get_time_label_for_seconds(session.total_time_in_seconds)
+
+		_on_click_edit_day(-1)
+		print("Date %d-%d-%d updated" % [day_container.day, day_container.month, day_container.year])
+		return
+
+	var day_container : TRDayContainer
+
+	if current_day_editing >= 0:
+		day_container = tr_days[current_day_editing]
+		day_container.label_time.visible = true
+		day_container.minutes_editor_container.visible = false
+		day_container.button_edit.text = "Edit"
+
+	current_day_editing = day_idx
+
+	if current_day_editing < 0:
+		return
+
+	# Get day data
+	day_container = tr_days[current_day_editing]
+
+	# Set day container info
+	day_container = tr_days[current_day_editing]
+	day_container.label_time.visible = false
+	day_container.minutes_editor_container.visible = true
+	day_container.button_edit.text = "Save"
+	day_container.minutes_input.value = day_container.time_in_seconds / 60

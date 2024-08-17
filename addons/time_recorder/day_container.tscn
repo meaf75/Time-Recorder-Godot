@@ -5,12 +5,18 @@
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pav3f"]
 bg_color = Color(0.219608, 0.239216, 0.266667, 1)
 
-[node name="day_container" type="PanelContainer" node_paths=PackedStringArray("label_day_number", "label_time")]
-custom_minimum_size = Vector2(101, 94)
+[node name="day_container" type="PanelContainer" node_paths=PackedStringArray("day_header_container", "label_day_number", "label_time", "button_edit", "minutes_editor_container", "minutes_input")]
+custom_minimum_size = Vector2(103, 103)
+offset_right = 103.0
+offset_bottom = 88.055
 theme_override_styles/panel = SubResource("StyleBoxFlat_pav3f")
 script = ExtResource("1_rid4r")
-label_day_number = NodePath("MarginContainer/VBoxContainer/HBoxContainer/LabelDay")
+day_header_container = NodePath("MarginContainer/VBoxContainer/HBoxContainerDayHeader")
+label_day_number = NodePath("MarginContainer/VBoxContainer/HBoxContainerDayHeader/LabelDay")
 label_time = NodePath("MarginContainer/VBoxContainer/LabelTime")
+button_edit = NodePath("MarginContainer/VBoxContainer/HBoxContainerDayHeader/ButtonEdit")
+minutes_editor_container = NodePath("MarginContainer/VBoxContainer/BoxContainer")
+minutes_input = NodePath("MarginContainer/VBoxContainer/BoxContainer/SpinBoxMinutes")
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 layout_mode = 2
@@ -22,18 +28,18 @@ theme_override_constants/margin_bottom = 5
 [node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
 layout_mode = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+[node name="HBoxContainerDayHeader" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
 custom_minimum_size = Vector2(0, 31)
 layout_mode = 2
 size_flags_vertical = 0
 
-[node name="LabelDay" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer"]
+[node name="LabelDay" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainerDayHeader"]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "1
 "
 
-[node name="Button" type="Button" parent="MarginContainer/VBoxContainer/HBoxContainer"]
+[node name="ButtonEdit" type="Button" parent="MarginContainer/VBoxContainer/HBoxContainerDayHeader"]
 visible = false
 layout_mode = 2
 size_flags_horizontal = 3
@@ -41,6 +47,21 @@ text = "Edit"
 
 [node name="LabelTime" type="Label" parent="MarginContainer/VBoxContainer"]
 layout_mode = 2
+size_flags_vertical = 3
 text = "4 h
 30 min"
 horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="BoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer"]
+visible = false
+layout_mode = 2
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/BoxContainer"]
+layout_mode = 2
+text = "Minutes:"
+horizontal_alignment = 1
+
+[node name="SpinBoxMinutes" type="SpinBox" parent="MarginContainer/VBoxContainer/BoxContainer"]
+layout_mode = 2
+max_value = 1440.0

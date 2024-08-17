@@ -43,6 +43,7 @@ class TRYear:
 		}
 
 class TRSession:
+	var name: String
 	var years : Dictionary = {} # int,TRYear
 	var total_time_in_seconds : int = 0
 
@@ -54,7 +55,8 @@ class TRSession:
 
 		return {
 			"years": dict,
-			"total_time_in_seconds": total_time_in_seconds
+			"total_time_in_seconds": total_time_in_seconds,
+			"name": name
 		}
 
 const TIME_RECODER_CONFIG_PATH = "user://time_recorder.cfg"
@@ -167,6 +169,7 @@ func validate_tr_data(sessions: Dictionary, year_number: int, month_number: int,
 		session = sessions[session_name]
 	else:
 		session = TRSession.new()
+		session.name = session_name
 		sessions[session_name] = session
 
 	# Get year
@@ -197,10 +200,10 @@ func validate_tr_data(sessions: Dictionary, year_number: int, month_number: int,
 
 func _process(delta):
 	if next_save_time < Time.get_unix_time_from_system():
-		save_time()
+		register_time()
 
 
-func save_time():
+func register_time():
 	var current_date = Time.get_datetime_dict_from_system()
 
 	tr_sessions.duplicate()
@@ -221,14 +224,17 @@ func save_time():
 	session.total_time_in_seconds += SAVE_ON_SECONDS
 	day.time_in_seconds += SAVE_ON_SECONDS
 
-	var file = FileAccess.open(TIME_RECODER_SAVE_PATH, FileAccess.WRITE)
-	file.store_string(JSON.stringify(serialize_tr_sessions(tr_sessions)))
-	file.close()
+	save(tr_sessions)
 
 	prepare_next_save()
 	tr_log("your develop time has been tracked")
 
 	on_save_data_update.emit()
+
+func save(sessions : Dictionary):
+	var file = FileAccess.open(TIME_RECODER_SAVE_PATH, FileAccess.WRITE)
+	file.store_string(JSON.stringify(serialize_tr_sessions(sessions)))
+	file.close()
 
 
 func prepare_next_save():
@@ -259,6 +265,7 @@ func deserialize_tr_sessions(json: String) -> Dictionary:
 		restored_data[session_key] = session
 
 		session.total_time_in_seconds = json_session.total_time_in_seconds
+		session.name = json_session.name
 
 		for year_key in json_session.years:
 			var year = TRYear.new()
@@ -291,6 +298,7 @@ func set_config(category: String, key: String, value: Variant):
 	if category == CONFIG_CATEGORY:
 		if key == CONFIG_KEY_PAUSED:
 			is_paused = value
+			set_process(!is_paused)
 
 	on_config_update.emit()
 
