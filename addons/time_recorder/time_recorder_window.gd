@@ -46,6 +46,9 @@ func load_month(month: int, year: int):
 	active_month = month
 	active_year = year
 
+	_on_click_edit_day(-1)
+	_on_hover_day_container(-1)
+
 	var sessions = _controller.tr_sessions.duplicate(true)
 
 	var year_key = str(year)
@@ -86,7 +89,7 @@ func load_month(month: int, year: int):
 	label_active_month.text = active_date
 	label_total_time.text = get_time_label_for_seconds(session.total_time_in_seconds)
 	button_pause.text = "Resume l>" if _controller.is_paused else "Pause [][]"
-	title = "Time Recorder (%s)" % ("Paused" if _controller.is_paused else "Running")
+	title = "Time Recorder (State: %s, Session: %s)" % [("Paused" if _controller.is_paused else "Running"), _controller.session_name]
 
 	var active_days = 0
 
@@ -145,8 +148,6 @@ func load_month(month: int, year: int):
 		day_container.time_in_seconds = time_in_seconds
 
 
-
-
 func get_time_label_for_seconds(seconds: int) -> String:
 	var label_time : String = ""
 	var hours : int = int(seconds / 3600)
@@ -193,6 +194,9 @@ func _on_button_pause_pressed():
 
 func _on_hover_day_container(day_idx: int):
 
+	if current_day_editing != -1:
+		return
+
 	if current_day_hovered >= 0:
 		tr_days[current_day_hovered].button_edit.visible = false
 
@@ -236,7 +240,7 @@ func _on_click_edit_day(day_idx: int):
 		label_total_time.text = get_time_label_for_seconds(session.total_time_in_seconds)
 
 		_on_click_edit_day(-1)
-		print("Date %d-%d-%d updated" % [day_container.day, day_container.month, day_container.year])
+		_controller.tr_log("Date %d-%d-%d updated" % [day_container.day, day_container.month, day_container.year], true)
 		return
 
 	var day_container : TRDayContainer

@@ -60,21 +60,30 @@ class TRSession:
 		}
 
 const TIME_RECODER_CONFIG_PATH = "user://time_recorder.cfg"
-const TIME_RECODER_SAVE_PATH = "res://addons/time_recorder/save_data.json"
+const DEFAULT_TIME_RECODER_SAVE_PATH = "res://addons/time_recorder/save_data.json"
+
+const DEFAULT_SESSION_NAME = "default"
 
 const menu_key = "editor/henlux"
 
 const CONFIG_CATEGORY = "CONFIG"
 const CONFIG_KEY_PAUSED = "paused"
 const CONFIG_KEY_NEXT_SAVE = "next_save"
+const CONFIG_KEY_SESSION_NAME = "session_name"
+const CONFIG_KEY_SAVE_DATA_PATH = "save_data_path"
 
-const SAVE_ON_SECONDS : int = 60 # 5 minutes
+const SAVE_ON_SECONDS : int = 60 * 5 # 5 minutes
+
+const TR_MENU_ID_WINDOW = 0
+const TR_MENU_ID_CONFIG_WINDOW = 1
 
 var config_file : ConfigFile
-var time_recorder_window : TRWindow
+var calendar_window : TRWindow
+var configurations_window : TRWindowConfigurations
 
 var is_paused : bool = false
-var session_name: String = "default"
+var session_name: String = DEFAULT_SESSION_NAME
+var save_path : String = DEFAULT_TIME_RECODER_SAVE_PATH
 var next_save_time : float = 0
 
 var tr_sessions : Dictionary = { } # string, TRSession
@@ -88,19 +97,31 @@ func _enter_tree():
 	if FileAccess.file_exists(TIME_RECODER_CONFIG_PATH):
 		config_file.load(TIME_RECODER_CONFIG_PATH)
 	else:
+		# Create config file
 		next_save_time = Time.get_unix_time_from_system()
 		config_file.set_value(CONFIG_CATEGORY, CONFIG_KEY_PAUSED, false)
 		config_file.set_value(CONFIG_CATEGORY, CONFIG_KEY_NEXT_SAVE, next_save_time)
+		config_file.set_value(CONFIG_CATEGORY, CONFIG_KEY_SESSION_NAME, DEFAULT_SESSION_NAME)
+		config_file.set_value(CONFIG_CATEGORY, CONFIG_KEY_SAVE_DATA_PATH, DEFAULT_TIME_RECODER_SAVE_PATH)
+
 		config_file.save(TIME_RECODER_CONFIG_PATH)
 		tr_log("config file created")
 
-	is_paused = config_file.get_value(CONFIG_CATEGORY, CONFIG_KEY_PAUSED)
+	is_paused = config_file.get_value(CONFIG_CATEGORY, CONFIG_KEY_PAUSED, false)
+	save_path = config_file.get_value(CONFIG_CATEGORY, CONFIG_KEY_SAVE_DATA_PATH, DEFAULT_TIME_RECODER_SAVE_PATH)
+	session_name = config_file.get_value(CONFIG_CATEGORY, CONFIG_KEY_SESSION_NAME, DEFAULT_SESSION_NAME)
 
-	add_tool_menu_item("Time Recorder", open_window)
-	add_tool_menu_item("test_script", henlux)
+	var submenu = PopupMenu.new()
+	submenu.add_item("Time Calendar", TR_MENU_ID_WINDOW)
+	submenu.add_item("Configuration", TR_MENU_ID_CONFIG_WINDOW)
 
-	if FileAccess.file_exists(TIME_RECODER_SAVE_PATH):
-		var file_saved_data = FileAccess.open(TIME_RECODER_SAVE_PATH, FileAccess.READ)
+	submenu.id_pressed.connect(_on_select_menu_item)
+
+	add_tool_submenu_item("Time Recorder", submenu)
+	#add_tool_menu_item("test_script", henlux)
+
+	if FileAccess.file_exists(save_path):
+		var file_saved_data = FileAccess.open(save_path, FileAccess.READ)
 		tr_sessions = deserialize_tr_sessions(file_saved_data.get_as_text())
 		file_saved_data.close()
 		tr_log("save data restored")
@@ -109,32 +130,65 @@ func _enter_tree():
 	set_process(!is_paused)
 
 
+func _on_select_menu_item(id: int):
+	if id == TR_MENU_ID_WINDOW:
+		open_window()
+
+	if id == TR_MENU_ID_CONFIG_WINDOW:
+		open_config_window()
+
+
 func open_window():
 
-	if time_recorder_window:
-		time_recorder_window.move_to_foreground()
-		time_recorder_window.popup_centered()
+	if calendar_window:
+		calendar_window.move_to_foreground()
+		calendar_window.popup_centered()
 		return
 
 	var window_node = load("res://addons/time_recorder/time_recorder_window.tscn")
 	var instance = window_node.instantiate() as TRWindow
 	#window = MFHttpInspector.new()
-	time_recorder_window = instance
+	calendar_window = instance
 
 	add_child(instance)
 
-	print("opening window")
+	tr_log("opening window")
 
-	time_recorder_window.popup_centered()
-	time_recorder_window.close_requested.connect(close_window)
-	time_recorder_window.open_window(self)
+	calendar_window.popup_centered()
+	calendar_window.close_requested.connect(close_window)
+	calendar_window.open_window(self)
+
+
+func open_config_window():
+
+	if configurations_window:
+		configurations_window.move_to_foreground()
+		configurations_window.popup_centered()
+		return
+
+	var window_node = load("res://addons/time_recorder/tr_window_configurations.tscn")
+	var instance = window_node.instantiate() as TRWindowConfigurations
+	#window = MFHttpInspector.new()
+	configurations_window = instance
+
+	add_child(instance)
+
+	tr_log("opening window")
+
+	configurations_window.popup_centered()
+	configurations_window.close_requested.connect(close_config_window)
+	configurations_window.open_window(self)
 
 
 func close_window():
-	time_recorder_window.queue_free()
-	time_recorder_window = null
-	print("removing window")
+	calendar_window.queue_free()
+	calendar_window = null
+	tr_log("removing calendar window")
 
+func close_config_window():
+	configurations_window.queue_free()
+	configurations_window = null
+	tr_log("removing config window")
 
 func henlux():
 	#var date
@@ -231,8 +285,9 @@ func register_time():
 
 	on_save_data_update.emit()
 
+
 func save(sessions : Dictionary):
-	var file = FileAccess.open(TIME_RECODER_SAVE_PATH, FileAccess.WRITE)
+	var file = FileAccess.open(save_path, FileAccess.WRITE)
 	file.store_string(JSON.stringify(serialize_tr_sessions(sessions)))
 	file.close()
 
@@ -253,7 +308,7 @@ func serialize_tr_sessions(sessions : Dictionary) -> Variant:
 
 
 func deserialize_tr_sessions(json: String) -> Dictionary:
-	var file_saved_data = FileAccess.open(TIME_RECODER_SAVE_PATH, FileAccess.READ)
+	var file_saved_data = FileAccess.open(save_path, FileAccess.READ)
 	var data = JSON.parse_string(json)
 	var restored_data : Dictionary
 
@@ -291,6 +346,7 @@ func deserialize_tr_sessions(json: String) -> Dictionary:
 
 	return restored_data
 
+
 func set_config(category: String, key: String, value: Variant):
 	config_file.set_value(category, key, value)
 	config_file.save(TIME_RECODER_CONFIG_PATH)
@@ -299,8 +355,16 @@ func set_config(category: String, key: String, value: Variant):
 		if key == CONFIG_KEY_PAUSED:
 			is_paused = value
 			set_process(!is_paused)
+		if key == CONFIG_KEY_SAVE_DATA_PATH:
+			save_path = value
+		if key == CONFIG_KEY_SESSION_NAME:
+			session_name = value
 
 	on_config_update.emit()
 
-func tr_log(message: String):
-	printraw("[TimeRecorder] %s\n" % message)
+
+func tr_log(message: String, print_in_editor: bool = false):
+	if print_in_editor:
+		print("[TimeRecorder] %s\n" % message)
+	else:
+		printraw("[TimeRecorder] %s\n" % message)

@@ -1,0 +1,173 @@
+[gd_scene load_steps=4 format=3 uid="uid://drhfd04mtk6mr"]
+
+[ext_resource type="Script" path="res://addons/time_recorder/tr_window_configurations.gd" id="1_vy6fw"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lhj45"]
+bg_color = Color(0.129412, 0.14902, 0.180392, 1)
+border_color = Color(0.992157, 0.717647, 0.741176, 1)
+corner_detail = 1
+expand_margin_left = 5.0
+expand_margin_top = 5.0
+expand_margin_right = 5.0
+expand_margin_bottom = 5.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ync2i"]
+bg_color = Color(0.25098, 0.266667, 0.298039, 1)
+
+[node name="TimeRecorderWindowConfigurations" type="Window" node_paths=PackedStringArray("label_state", "button_apply_save_path", "input_save_path", "sessions_options", "session_name_line_edit", "create_session_window", "accept_dialog")]
+title = "Time Recorder Configurations"
+initial_position = 4
+size = Vector2i(480, 260)
+script = ExtResource("1_vy6fw")
+label_state = NodePath("PanelContainer/PanelContainer/MarginContainerPause/HBoxContainer/VBoxContainer/RichTextLabelState")
+button_apply_save_path = NodePath("PanelContainer/PanelContainer/MarginContainerSaveDataPath/HBoxContainer/ButtonApplySavePath")
+input_save_path = NodePath("PanelContainer/PanelContainer/MarginContainerSaveDataPath/HBoxContainer/LineEditSavePath")
+sessions_options = NodePath("PanelContainer/PanelContainer/MarginContainerSession/OptionButton")
+session_name_line_edit = NodePath("NewSessionDialog/LineEditSessionName")
+create_session_window = NodePath("NewSessionDialog")
+accept_dialog = NodePath("AcceptDialog")
+
+[node name="PanelContainer" type="PanelContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_lhj45")
+
+[node name="PanelContainer" type="VBoxContainer" parent="PanelContainer"]
+layout_mode = 2
+
+[node name="PanelContainerPause" type="PanelContainer" parent="PanelContainer/PanelContainer"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_ync2i")
+
+[node name="MarginContainer" type="MarginContainer" parent="PanelContainer/PanelContainer/PanelContainerPause"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="Label" type="Label" parent="PanelContainer/PanelContainer/PanelContainerPause/MarginContainer"]
+layout_mode = 2
+text = "Pause Time Recorder"
+
+[node name="MarginContainerPause" type="MarginContainer" parent="PanelContainer/PanelContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/PanelContainer/MarginContainerPause"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="PanelContainer/PanelContainer/MarginContainerPause/HBoxContainer"]
+layout_mode = 2
+text = "Time Recorder is:"
+vertical_alignment = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/PanelContainer/MarginContainerPause/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+alignment = 1
+
+[node name="RichTextLabelState" type="RichTextLabel" parent="PanelContainer/PanelContainer/MarginContainerPause/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+bbcode_enabled = true
+text = "[center][color=green]Running[/color][/center]"
+fit_content = true
+scroll_active = false
+
+[node name="ButtonPause" type="Button" parent="PanelContainer/PanelContainer/MarginContainerPause/HBoxContainer"]
+layout_mode = 2
+text = " Pause [][] "
+
+[node name="PanelContainerSession" type="PanelContainer" parent="PanelContainer/PanelContainer"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_ync2i")
+
+[node name="MarginContainer" type="MarginContainer" parent="PanelContainer/PanelContainer/PanelContainerSession"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="Label" type="Label" parent="PanelContainer/PanelContainer/PanelContainerSession/MarginContainer"]
+layout_mode = 2
+text = "Session active"
+
+[node name="MarginContainerSession" type="MarginContainer" parent="PanelContainer/PanelContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="OptionButton" type="OptionButton" parent="PanelContainer/PanelContainer/MarginContainerSession"]
+layout_mode = 2
+item_count = 1
+selected = 0
+popup/item_0/text = "Default"
+popup/item_0/id = 0
+
+[node name="PanelContainerSaveDataPath" type="PanelContainer" parent="PanelContainer/PanelContainer"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_ync2i")
+
+[node name="MarginContainer" type="MarginContainer" parent="PanelContainer/PanelContainer/PanelContainerSaveDataPath"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="Label" type="Label" parent="PanelContainer/PanelContainer/PanelContainerSaveDataPath/MarginContainer"]
+layout_mode = 2
+text = "Save path"
+
+[node name="MarginContainerSaveDataPath" type="MarginContainer" parent="PanelContainer/PanelContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/PanelContainer/MarginContainerSaveDataPath"]
+layout_mode = 2
+
+[node name="LineEditSavePath" type="LineEdit" parent="PanelContainer/PanelContainer/MarginContainerSaveDataPath/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "res://addons/time_recorder/save_data.json"
+
+[node name="ButtonApplySavePath" type="Button" parent="PanelContainer/PanelContainer/MarginContainerSaveDataPath/HBoxContainer"]
+layout_mode = 2
+disabled = true
+text = " Update "
+
+[node name="FileDialog" type="FileDialog" parent="PanelContainer"]
+
+[node name="NewSessionDialog" type="AcceptDialog" parent="."]
+title = "Enter the new session name"
+initial_position = 4
+size = Vector2i(325, 88)
+ok_button_text = " Create "
+
+[node name="LineEditSessionName" type="LineEdit" parent="NewSessionDialog"]
+offset_left = 8.0
+offset_top = 8.0
+offset_right = 317.0
+offset_bottom = 39.0
+placeholder_text = "Session name"
+
+[node name="AcceptDialog" type="AcceptDialog" parent="."]
+initial_position = 4
+size = Vector2i(280, 80)
+dialog_text = "Henlux brogfhfghgf"
+
+[connection signal="pressed" from="PanelContainer/PanelContainer/MarginContainerPause/HBoxContainer/ButtonPause" to="." method="_on_button_pause_pressed"]
+[connection signal="item_selected" from="PanelContainer/PanelContainer/MarginContainerSession/OptionButton" to="." method="_on_option_button_item_selected"]
+[connection signal="text_changed" from="PanelContainer/PanelContainer/MarginContainerSaveDataPath/HBoxContainer/LineEditSavePath" to="." method="_on_line_edit_save_path_text_changed"]
+[connection signal="pressed" from="PanelContainer/PanelContainer/MarginContainerSaveDataPath/HBoxContainer/ButtonApplySavePath" to="." method="_on_button_apply_save_path_pressed"]
+[connection signal="confirmed" from="NewSessionDialog" to="." method="_create_new_session"]
